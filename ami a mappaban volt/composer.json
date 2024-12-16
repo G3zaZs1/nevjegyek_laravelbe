@@ -1,0 +1,17 @@
+{
+    "name": "geza/20240930_nevjegyzek",
+    "autoload": 
+    {
+        "psr-4": 
+        {
+            "geza\\20240930_nevjegyzek\\": "src/"
+        }
+    },
+    "authors": 
+    [
+        {
+            "name": "geza"
+        }
+    ],
+    "require": {"firebase/php-jwt": "^6.0"}
+}

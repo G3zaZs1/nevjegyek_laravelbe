@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="contactsApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet" href="../stilus.css">
+    <title>Névjegyzék</title>
+</head>
+<body ng-controller="contactsContorller">
+    <h1>List</h1>
+    <table>
+        <tr>
+            <th>Fotó:</th>
+            <th>Név:</th>
+            <th>Cégnév:</th>
+            <th>Mobil:</th>
+            <th>E-mail</th>
+            <th>Műveletek?</th>
+        </tr>
+        <tr ng-repeat="i in contacts">
+            <td><img ng-src="../kepek/{{i.foto}}" alt="{{i.nev}}" width="50"></td>
+            <td>{{i.nev}}</td>
+            <td>{{i.cegnev}}</td>
+            <td>{{i.mobil}}</td>
+            <td>{{i.email}}</td>
+            <td>
+                <!--módosításra irányítás-->
+                <a href="RA-update-angular.html?id={{i.id}}">Módisítás</a>
+                <!--törlésre irányítás-->
+                <a href="#" ng-click="deleteContact{i.id}">Törlés</a>
+            </td>
+        </tr>
+    </table>
+    <a href="Ra-angular-list.html">Vissza a lista oldalára</a>
+
+    <p ng-if="successMessage" class="success">{{successMessage}}</p>
+    <p ng-if="errorMessage" class="error">{{errorMessage}}</p>
+
+    <script>
+        const app = angular.module('contactsApp', []);
+        
+        app.controller('contactsContorller', ['$scope', '$http', function($scope, $http)
+        {
+            $scope.loadContacts = function()
+            {
+                console.log("fut");
+            $http.get('RA-get-contact.php')
+            .then(function(response)
+            {
+                $scope.contacts = response.data;
+                console.log($scope.contacts)
+            }, function(error)
+                {
+                    console.error('Adatbetöltési hiba:', error);
+                })}
+            $scope.loadContacts();
+            //törlési funkciók - get methodus a restful apihoz
+            $scope.deleteContact = function(id)
+            {
+                if([confirm('Biztos törölni szeretnéd?')])
+                {
+                    $http
+                    ({
+                        method: 'GET',
+                        URL: 'RA-delete-contact.php?id=' + id
+                    })
+                    .then(function(response)
+                    {
+                        if(list.status === 200)
+                        {
+                            $scope.loadContacts();
+                            $scope.successMessage = 'Névjegy sikeresen törölve';
+                            $scope.error = null;
+                        }
+                        else
+                        {
+                            $scope.errorMessage = "Sikeres törlés";
+                            $scope.successMessage = null;
+                        }
+                    })
+                }
+            }            
+        }]);
+    </script>
+</body>
+</html>
